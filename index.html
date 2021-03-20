@@ -1,0 +1,19 @@
+<script>
+    localStorage.removeItem('live-editor-style')
+    let latestStyle = null
+    setInterval(() => {
+        const currentStyle = localStorage.getItem('live-editor-style')
+        if (currentStyle != latestStyle) {
+            window.parent.postMessage({
+                type:'newStyle',
+                newStyle:currentStyle
+            }, '*')
+        }
+        latestStyle = currentStyle;
+    }, 100)
+    window.addEventListener('message', (event) => {
+        if (event.origin === 'https://live.anotion.so' && event.data.type === 'pushStyle') {
+            localStorage.setItem('live-editor-style', event.data.newStyle)
+        }
+    })
+</script>
